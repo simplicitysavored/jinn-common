@@ -4,7 +4,7 @@ package xyz.yuanjin.project.common.dto;
  * @author yuanjin
  */
 public class ResponseDTO {
-    private boolean success;
+    private Boolean success;
 
     private Integer statusCode;
 
