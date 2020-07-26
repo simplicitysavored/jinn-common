@@ -1,5 +1,7 @@
 package xyz.yuanjin.project.common.dto;
 
+import com.alibaba.fastjson.JSON;
+
 /**
  * @author yuanjin
  */
@@ -50,10 +52,6 @@ public class ResponseDTO {
 
     @Override
     public String toString() {
-        return "ResponseDTO{" +
-                "statusCode=" + statusCode +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                '}';
+        return JSON.toJSONString(this);
     }
 }
