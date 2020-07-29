@@ -9,37 +9,40 @@ import xyz.yuanjin.project.common.enums.ResponseEnum;
  */
 public class ResponseUtil {
 
+    public static ResponseDTO error() {
+        return error(null);
+    }
+
+    public static ResponseDTO error(String message) {
+        return response(ResponseEnum.SERVER_ERROR, null, message, null);
+    }
+
+    public static ResponseDTO success() {
+        return response(ResponseEnum.SUCCESS, null, null, null);
+    }
+
     public static ResponseDTO response(ResponseEnum value) {
-        ResponseDTO dto = new ResponseDTO();
-        dto.setStatusCode(value.getCode());
-        dto.setMessage(value.getDesc());
-        dto.setSuccess(ResponseEnum.SUCCESS.equals(value));
-        return dto;
+        return response(value, null, null, null);
     }
 
     public static ResponseDTO response(ResponseEnum value, Object data) {
-        ResponseDTO dto = new ResponseDTO();
-        dto.setStatusCode(value.getCode());
-        dto.setMessage(value.getDesc());
-        dto.setSuccess(ResponseEnum.SUCCESS.equals(value));
-        dto.setData(data);
-        return dto;
+        return response(value, data, null, null);
     }
 
     public static ResponseDTO response(ResponseEnum value, String message) {
-        ResponseDTO dto = new ResponseDTO();
-        dto.setStatusCode(value.getCode());
-        dto.setMessage(message);
-        dto.setSuccess(ResponseEnum.SUCCESS.equals(value));
-        return dto;
+        return response(value, null, message, null);
     }
 
     public static ResponseDTO response(ResponseEnum value, Object data, String message) {
+        return response(value, data, message, null);
+    }
+
+    public static ResponseDTO response(ResponseEnum value, Object data, String message, Object extendInfo) {
         ResponseDTO dto = new ResponseDTO();
         dto.setStatusCode(value.getCode());
         dto.setMessage(message);
-        dto.setSuccess(ResponseEnum.SUCCESS.equals(value));
         dto.setData(data);
+        dto.setExtendInfo(extendInfo);
         return dto;
     }
 
@@ -47,7 +50,6 @@ public class ResponseUtil {
     public static ResponseDTO error(Integer statusCode, String errorMsg) {
         ResponseDTO dto = new ResponseDTO();
         dto.setStatusCode(statusCode);
-        dto.setSuccess(false);
         dto.setMessage(errorMsg);
 
         return dto;
@@ -57,20 +59,9 @@ public class ResponseUtil {
     public static ResponseDTO success(Integer statusCode, String successMsg) {
         ResponseDTO dto = new ResponseDTO();
         dto.setStatusCode(statusCode);
-        dto.setSuccess(true);
         dto.setMessage(successMsg);
 
         return dto;
-    }
-
-    @Deprecated
-    public static ResponseDTO success() {
-        return success(200, null);
-    }
-
-    @Deprecated
-    public static ResponseDTO error(String errorMsg) {
-        return error(500, errorMsg);
     }
 
     @Deprecated

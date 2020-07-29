@@ -6,13 +6,26 @@ import com.alibaba.fastjson.JSON;
  * @author yuanjin
  */
 public class ResponseDTO {
-    private Boolean success;
 
+    /**
+     * 返回状态码
+     */
     private Integer statusCode;
 
+    /**
+     * 响应信息
+     */
     private String message;
 
+    /**
+     * 主要数据
+     */
     private Object data;
+
+    /**
+     * 扩展字段
+     */
+    private Object extendInfo;
 
     public Integer getStatusCode() {
         return statusCode;
@@ -41,12 +54,12 @@ public class ResponseDTO {
         return this;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public Object getExtendInfo() {
+        return extendInfo;
     }
 
-    public ResponseDTO setSuccess(boolean success) {
-        this.success = success;
+    public ResponseDTO setExtendInfo(Object extendInfo) {
+        this.extendInfo = extendInfo;
         return this;
     }
 
