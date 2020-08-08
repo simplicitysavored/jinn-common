@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
  *
  * @author yuanjin
  */
+@Deprecated
 public class UnitUtils {
 
     /**
