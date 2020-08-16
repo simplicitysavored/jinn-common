@@ -247,4 +247,28 @@ public final class FileUtil {
                 VideoEnum.FLV.getPattern().matcher(file.getAbsolutePath()).matches();
     }
 
+    public static String readFromClasspath(String name) throws IOException {
+        InputStream is = null;
+        try {
+            is = FileUtil.class.getClassLoader().getResourceAsStream(name);
+
+            if (null != is) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                try {
+
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = is.read(bytes)) != -1) {
+                        bos.write(bytes, 0, length);
+                    }
+                    return bos.toString();
+                } finally {
+                    close(bos);
+                }
+            }
+        } finally {
+            close(is);
+        }
+        return null;
+    }
 }

@@ -16,6 +16,13 @@ public class CollectionUtil {
         return !isEmpty(value);
     }
 
+    public static <T> boolean isEmpty(List<T> value) {
+        return value == null || value.size() == 0;
+    }
+    public static <T> boolean isNotEmpty(List<T> value) {
+        return !isEmpty(value);
+    }
+
 
     public static String listToString(List<String> list, String separator) {
         if (list.size() == 0) {
