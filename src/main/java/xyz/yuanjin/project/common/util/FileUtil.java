@@ -7,6 +7,7 @@ import xyz.yuanjin.project.common.enums.VideoEnum;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 import java.util.Objects;
 
 /**
@@ -272,5 +273,12 @@ public final class FileUtil {
             close(is);
         }
         return null;
+    }
+
+    public static void rename(File sourFile, File destFile) throws FileSystemException {
+        boolean flag = sourFile.renameTo(destFile);
+        if (!flag) {
+            throw new FileSystemException(sourFile.getAbsolutePath() + " rename to " + destFile.getAbsolutePath() + " failed!");
+        }
     }
 }
