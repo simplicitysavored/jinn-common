@@ -17,12 +17,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * @author yuanjin
+ */
 public class ExcelUtil {
     private static final String XLS = ".xls";
     private static final String XLSX = ".xlsx";
 
     public static <T> void write(List<T> list, File file) throws ExcelParseErrorException {
-        Workbook workbook = null;
+        Workbook workbook;
         if (file.getName().endsWith(XLS)) {
             workbook = new HSSFWorkbook();
         } else if (file.getName().endsWith(XLSX)) {
@@ -92,21 +95,41 @@ public class ExcelUtil {
 
     public static <T> List<T> read(Class<T> clz, String path) throws ExcelParseErrorException {
         File file = new File(path);
-        return read(clz, file);
+        return read(clz, file, 0);
+    }
+
+    public static <T> List<T> read(Class<T> clz, String path, int sheetAt) throws ExcelParseErrorException {
+        File file = new File(path);
+        return read(clz, file, sheetAt);
     }
 
     public static <T> List<T> read(Class<T> clz, File file) throws ExcelParseErrorException {
+        return read(clz, file, 0);
+
+    }
+
+    /**
+     * 读取Excel
+     *
+     * @param clz     解析的类（需要使用{@link ExcelCellEnum}标记）
+     * @param file    Excel文件
+     * @param sheetAt sheet编号（第一个为0）
+     * @param <T>     范型
+     * @return List
+     * @throws ExcelParseErrorException 异常
+     */
+    public static <T> List<T> read(Class<T> clz, File file, int sheetAt) throws ExcelParseErrorException {
         if (!(file.getName().endsWith(XLS) || file.getName().endsWith(XLSX))) {
             throw new ExcelParseErrorException("Excel文件解析失败 | 不是xls或xlsx");
         }
-        Workbook workbook = null;
+        Workbook workbook;
         try {
             workbook = WorkbookFactory.create(file);
         } catch (IOException | InvalidFormatException e) {
             throw new ExcelParseErrorException("Excel对象初始化失败");
         }
 
-        Sheet sheet = workbook.getSheetAt(0);
+        Sheet sheet = workbook.getSheetAt(sheetAt);
 
         int numberOfRows = sheet.getPhysicalNumberOfRows();
 
@@ -117,7 +140,7 @@ public class ExcelUtil {
         for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (null != row) {
-                T t = null;
+                T t;
                 try {
                     t = clz.newInstance();
                 } catch (Exception e) {
@@ -130,6 +153,9 @@ public class ExcelUtil {
                         ExcelCellEnum cellEnum = excelColumn.cell();
                         int cellIndex = cellEnum.getValue();
                         Cell cell = row.getCell(cellIndex);
+                        if (null == cell) {
+                            continue;
+                        }
 
                         try {
                             if (Integer.class.equals(field.getType())) {
@@ -156,7 +182,6 @@ public class ExcelUtil {
         }
 
         return list;
-
     }
 
 

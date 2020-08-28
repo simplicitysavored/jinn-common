@@ -1,6 +1,14 @@
 package xyz.yuanjin.project.common.enums;
 
+/**
+ * 表格单元格列
+ * @author yuanjin
+ */
+@SuppressWarnings("unused")
 public enum ExcelCellEnum {
+    /**
+     * 表格单元格列
+     */
     A(0),
     B(1),
     C(2),
@@ -26,7 +34,15 @@ public enum ExcelCellEnum {
     W(22),
     X(23),
     Y(24),
-    Z(25);
+    Z(25),
+    AA(26),
+    AB(27),
+    AC(28),
+    AD(29),
+    AE(30),
+    AF(31),
+    AG(32),
+    AH(33);
 
     private int value;
 

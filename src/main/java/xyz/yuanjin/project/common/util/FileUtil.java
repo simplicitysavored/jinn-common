@@ -124,18 +124,20 @@ public final class FileUtil {
 
     public static String read(InputStream inputStream, final String charset) {
         String result = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            byte[] bytes = new byte[1024];
-            int length;
-            while ((length = inputStream.read(bytes)) != -1) {
-                bos.write(bytes, 0, length);
+        if (null != inputStream) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try {
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length = inputStream.read(bytes)) != -1) {
+                    bos.write(bytes, 0, length);
+                }
+                result = bos.toString(charset);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            } finally {
+                close(bos);
             }
-            result = bos.toString(charset);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        } finally {
-            close(bos);
         }
         return result;
     }

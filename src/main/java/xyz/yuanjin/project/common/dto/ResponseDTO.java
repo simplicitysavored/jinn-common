@@ -27,6 +27,8 @@ public class ResponseDTO {
      */
     private Object extendInfo;
 
+    private String token;
+
     public Integer getStatusCode() {
         return statusCode;
     }
@@ -60,6 +62,15 @@ public class ResponseDTO {
 
     public ResponseDTO setExtendInfo(Object extendInfo) {
         this.extendInfo = extendInfo;
+        return this;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public ResponseDTO setToken(String token) {
+        this.token = token;
         return this;
     }
 
