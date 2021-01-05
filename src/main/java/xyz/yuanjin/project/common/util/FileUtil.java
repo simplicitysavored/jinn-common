@@ -275,10 +275,42 @@ public final class FileUtil {
         return null;
     }
 
-    public static void rename(File sourFile, File destFile) throws FileSystemException {
+    @Deprecated
+    public static void rename_old(File sourFile, File destFile) throws FileSystemException {
         boolean flag = sourFile.renameTo(destFile);
         if (!flag) {
             throw new FileSystemException(sourFile.getAbsolutePath() + " rename to " + destFile.getAbsolutePath() + " failed!");
         }
+    }
+
+    public static void rename(File sourFile, File destFile) throws IOException {
+        if (destFile.exists()) {
+            throw new FileAlreadyExistsException("file already exists: " + destFile.getAbsolutePath());
+        }
+        LOGGER.info("target file: {}", destFile.getAbsoluteFile());
+        File parentFile = destFile.getParentFile();
+        if (!parentFile.exists()) {
+            boolean flag = parentFile.mkdirs();
+            LOGGER.info("create folder {} | {}", (flag ? "success" : "failed"), parentFile.getAbsoluteFile());
+            if (!flag) {
+                throw new FileSystemException("create folder exception " + parentFile.getAbsolutePath());
+            }
+        }
+        try (FileInputStream fis = new FileInputStream(sourFile)) {
+            FileOutputStream fos = new FileOutputStream(destFile);
+            int length;
+            byte[] bytes = new byte[1024];
+            while ((length = fis.read(bytes)) != -1) {
+                fos.write(bytes, 0, length);
+                fos.flush();
+            }
+            fos.flush();
+            fos.close();
+            LOGGER.info("write file success | {}", destFile.getAbsoluteFile());
+        }
+
+        boolean delete = sourFile.delete();
+        LOGGER.info("delete file {}", delete ? "success" : "failed");
+
     }
 }
