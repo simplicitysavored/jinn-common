@@ -49,4 +49,11 @@ public class StringUtil {
     public static Boolean isNotBlank(String value) {
         return !isBlank(value);
     }
+
+    public static String ifNull(String value, String replace) {
+        if (null == value) {
+            return replace;
+        }
+        return value;
+    }
 }

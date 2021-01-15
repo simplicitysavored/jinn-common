@@ -1,4 +1,4 @@
-package xyz.yuanjin.project.common.dto.tmp;
+package xyz.yuanjin.project.common.sample.dto;
 
 import lombok.Data;
 import xyz.yuanjin.project.common.annotation.ExcelColumn;

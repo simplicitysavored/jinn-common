@@ -2,10 +2,8 @@ package xyz.yuanjin.project.common.enums;
 
 /**
  * @author yuanjin
- * 替换为{@link ResponseStatusEnum}
  */
-@Deprecated
-public enum ResponseEnum {
+public enum ResponseStatusEnum {
     /**
      * 响应状态
      */
@@ -17,7 +15,7 @@ public enum ResponseEnum {
     private int code;
     private String desc;
 
-    ResponseEnum(int code, String desc) {
+    ResponseStatusEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }

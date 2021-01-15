@@ -34,5 +34,15 @@ public enum UnitEnum {
         this.rate = rate;
     }
 
+    public String getEnglishNm() {
+        return englishNm;
+    }
 
+    public String getChineseNm() {
+        return chineseNm;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
 }

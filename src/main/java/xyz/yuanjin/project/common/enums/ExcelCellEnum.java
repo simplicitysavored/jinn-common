@@ -2,6 +2,7 @@ package xyz.yuanjin.project.common.enums;
 
 /**
  * 表格单元格列
+ *
  * @author yuanjin
  */
 @SuppressWarnings("unused")
@@ -42,7 +43,25 @@ public enum ExcelCellEnum {
     AE(30),
     AF(31),
     AG(32),
-    AH(33);
+    AH(33),
+    AI(34),
+    AJ(35),
+    AK(36),
+    AL(37),
+    AM(38),
+    AN(39),
+    AO(40),
+    AP(41),
+    AQ(42),
+    AR(43),
+    AS(44),
+    AT(45),
+    AU(46),
+    AV(47),
+    AW(48),
+    AX(49),
+    AY(50),
+    AZ(51);
 
     private int value;
 

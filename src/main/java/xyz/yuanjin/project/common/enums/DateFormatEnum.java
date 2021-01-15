@@ -1,6 +1,13 @@
 package xyz.yuanjin.project.common.enums;
 
+/**
+ * @author yuanjin
+ */
+
 public enum DateFormatEnum {
+    /**
+     * 日期格式
+     */
     YYYY_MM_DD_HH_MM_SS_1("yyyy-MM-dd HH:mm:ss"),
     YYYY_MM_DD_HH_MM_SS_2("yyyy/MM/dd HH:mm:ss"),
     YYYY_MM_DD_HH_MM_1("yyyy-MM-dd HH:mm"),
