@@ -23,8 +23,25 @@ public final class FileUtil {
         return exists(file);
     }
 
+    public static boolean notExists(String filePath) {
+        return !exists(filePath);
+    }
+
+    public static boolean notExists(File file) {
+        return !exists(file);
+    }
+
     public static boolean exists(File file) {
         return file.exists();
+    }
+
+    public static boolean existsAll(String[] filePathArray) {
+        for (String path : filePathArray) {
+            if (notExists(path)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static File mkdirs(String directoryPath) {
