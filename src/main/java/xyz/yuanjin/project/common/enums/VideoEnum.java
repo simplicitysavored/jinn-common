@@ -7,9 +7,26 @@ import java.util.regex.Pattern;
  */
 public enum VideoEnum {
     /**
-     * 后缀
+     * 微软视频 ：wmv、asf、asx
+     * Real Player ：rm、 rmvb
+     * MPEG视频 ：mp4
+     * 手机视频 ：3gp
+     * Apple视频 ：mov、m4v
+     * 其他常见视频：avi、dat、mkv、flv、vob等
      */
+    WMV("wmv"),
+    ASF("asf"),
+    ASX("asx"),
+    RM("rm"),
+    RMVB("rmvb"),
     MP4("mp4"),
+    $3GP("3gp"),
+    MOV("mov"),
+    M4V("m4v"),
+    AVI("avi"),
+    DAT("dat"),
+    MKV("mkv"),
+    VOB("vob"),
     FLV("flv");
 
     private String suffix;
@@ -17,7 +34,9 @@ public enum VideoEnum {
 
     VideoEnum(String suffix) {
         this.suffix = suffix;
-        pattern = Pattern.compile("^.*\\.".concat(suffix).concat("$"));
+        String regex = "^.*\\.".concat(suffix).concat("$");
+        // 忽略字母大小写
+        pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
 
     public String getSuffix() {

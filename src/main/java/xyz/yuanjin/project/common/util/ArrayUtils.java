@@ -86,11 +86,5 @@ public class ArrayUtils {
         return newArray;
     }
 
-    public static void main(String[] args) {
-        String[] tmp = {"1","2"};
-        String[] newArr = add(tmp, "3");
-        System.out.println(newArr);
-    }
-
 
 }

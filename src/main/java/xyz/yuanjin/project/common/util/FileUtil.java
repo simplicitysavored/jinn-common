@@ -14,7 +14,6 @@ import java.util.Objects;
  * @author yuanjin
  * @version v1.0 on 2019/9/10 21:55
  */
-@SuppressWarnings("unused")
 public final class FileUtil {
     private final static Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 
@@ -56,6 +55,12 @@ public final class FileUtil {
         return file;
     }
 
+    /**
+     * 如果不存在则创建文件
+     *
+     * @param filePath 文件绝对路径
+     * @return 创建的文件
+     */
     public static File createFileIfNotExists(String filePath) {
         File file = new File(filePath);
         try {
@@ -263,10 +268,20 @@ public final class FileUtil {
     }
 
     public static boolean isVideo(File file) {
-        return VideoEnum.MP4.getPattern().matcher(file.getAbsolutePath()).matches() ||
-                VideoEnum.FLV.getPattern().matcher(file.getAbsolutePath()).matches();
+        for (VideoEnum video : VideoEnum.values()) {
+            if (video.getPattern().matcher(file.getAbsolutePath()).matches()) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    /**
+     * 从 classpath 中获取获取文件内容
+     * @param name 文件名
+     * @return 文件内容
+     * @throws IOException 异常
+     */
     public static String readFromClasspath(String name) throws IOException {
         InputStream is = null;
         try {
