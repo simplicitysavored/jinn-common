@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    wrapperClass: 必填，Excel解析后输出的类型；
+-->
+<root wrapperClass="dto.BatchProjectDTO">
+    <!--
+        name: 必填，sheet名称
+        javaClass: 必填，用哪个Class解析
+        dataRowNum: 必填，数据从第几行开始
+    -->
+    <sheet name="批处理任务汇总" javaClass="dto.BatchSchedule" javaField="batchScheduleList" dataStartRow="1">
+        <rowTitle rowNum="1">
+            <cell colNum="0" javaField="jobName" desc="批处理任务名"/>
+            <cell colNum="1" javaField="jobType"/>
+            <cell colNum="2" javaField="jobDesc"/>
+            <cell colNum="3" javaField="jobDependence"/>
+            <cell colNum="4" javaField="jobRunCycle"/>
+            <cell colNum="5" javaField="jobRunDate"/>
+            <cell colNum="6" javaField="jobFlow"/>
+            <cell colNum="7" javaField="contactPerson" defaultValue="Auto Fill"/>
+            <cell colNum="8" javaField="devStatus" defaultValue="待定"/>
+            <cell colNum="9" javaField="testStatus"/>
+            <cell colNum="10" javaField="developer"/>
+            <cell colNum="11" javaField="dataSource"/>
+            <cell colNum="12" javaField="remark"/>
+        </rowTitle>
+    </sheet>
+    <sheet name="供数记录" javaClass="dto.BatchProvide" javaField="batchProvideList" dataStartRow="1">
+        <rowTitle rowNum="1">
+            <cell colNum="0" javaField="naturalDay" format="yyyy-MM-dd"/>
+            <cell colNum="1" javaField="businessDay"/>
+            <cell colNum="2" javaField="env"/>
+            <cell colNum="3" javaField="type"/>
+            <cell colNum="4" javaField="progressRate" defaultValue="未供数"/>
+            <cell colNum="5" javaField="remark" defaultValue="DEFAULT REMARK"/>
+        </rowTitle>
+        <rowData>
+            <ignore>
+
+            </ignore>
+        </rowData>
+    </sheet>
+</root>

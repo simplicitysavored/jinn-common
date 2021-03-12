@@ -73,7 +73,4 @@ public enum ExcelCellEnum {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
 }
