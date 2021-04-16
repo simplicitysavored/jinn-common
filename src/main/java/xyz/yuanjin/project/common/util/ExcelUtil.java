@@ -1,8 +1,10 @@
 package xyz.yuanjin.project.common.util;
 
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
@@ -76,6 +78,69 @@ public class ExcelUtil {
             FileOutputStream fos = new FileOutputStream(file);
             workbook.write(fos);
             fos.close();
+        } catch (IOException e) {
+            throw new ExcelParseErrorException("Excel写入失败");
+        }
+
+    }
+
+    public static <T> void writeBig(List<T> list, File file) throws ExcelParseErrorException {
+
+        SXSSFWorkbook workbook = new SXSSFWorkbook(100);
+
+        // 这里之后可以自定义sheet名称
+        Sheet sheet = workbook.createSheet();
+        Field[] fields = createFirstRowAndReturnFields(list.get(0).getClass(), sheet);
+
+        for (int rowIndex = 0; rowIndex < list.size(); ) {
+            T t = list.get(rowIndex++);
+
+            Row row = sheet.createRow(rowIndex);
+            for (Field field : fields) {
+                field.setAccessible(true);
+                ExcelColumn excelColumn = field.getAnnotation(ExcelColumn.class);
+                if (null != excelColumn) {
+                    Cell cell = row.createCell(excelColumn.cell().getValue());
+                    //cell.setCellType(CellType.STRING);
+                    try {
+                        if (Date.class.equals(field.getType())) {
+                            DateFormat df = new SimpleDateFormat(DateFormatEnum.YYYY_MM_DD_HH_MM_SS_1.getValue());
+                            cell.setCellValue(df.format(field.get(t)));
+                        }
+                        if (Double.class.equals(field.getType())) {
+                            cell.setCellType(CellType.NUMERIC);
+                            // 没有小树则只显示整数
+                            double tmpVal = Double.parseDouble(String.valueOf(field.get(t)));
+                            DataFormat format = workbook.createDataFormat();
+                            if (tmpVal - (int) tmpVal == 0) {
+                                cell.getCellStyle().setDataFormat(format.getFormat("#"));
+                                int intVal = (int) tmpVal;
+                                cell.setCellValue(intVal);
+                            } else {
+                                cell.setCellValue(tmpVal);
+                            }
+                        }
+                        if (Integer.class.equals(field.getType())) {
+                            cell.setCellType(CellType.NUMERIC);
+                            cell.setCellValue(Integer.parseInt(String.valueOf(field.get(t))));
+                        } else {
+                            cell.setCellValue(String.valueOf(field.get(t)));
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        throw new ExcelParseErrorException("Excel写入失败");
+                    }
+                }
+            }
+        }
+
+        try {
+            FileUtil.createFileIfNotExists(file.getAbsolutePath());
+
+            FileOutputStream fos = new FileOutputStream(file);
+            workbook.write(fos);
+            fos.close();
+            workbook.dispose();
         } catch (IOException e) {
             throw new ExcelParseErrorException("Excel写入失败");
         }
@@ -214,7 +279,10 @@ public class ExcelUtil {
         Field[] sheetFields = clz.getDeclaredFields();
         Map<String, Field> sheetFieldNameMap = Arrays.stream(sheetFields).collect(Collectors.toMap(Field::getName, field -> field));
 
+        System.out.printf("正在初始化Workbook ｜ %s\n", sourcePath);
         try (Workbook workbook = getWorkbook(new File(sourcePath))) {
+            System.out.printf("完成初始化Workbook ｜ %s\n", sourcePath);
+
             for (ParseExcelSheetConfig sheetConfig : excelConfig.getParseExcelSheetList()) {
                 List<Object> tmpList = new ArrayList<>();
 
@@ -317,7 +385,7 @@ public class ExcelUtil {
         sheetElList.forEach(sheetEl -> {
             String sheetName = sheetEl.attributeValue("name");
             String javaClass = sheetEl.attributeValue("javaClass");
-            Integer dataStart = Integer.valueOf(sheetEl.attributeValue("dataStartRow"));
+            Integer dataStart = Integer.parseInt(sheetEl.attributeValue("dataStartRow")) - 1;
             String javaField = sheetEl.attributeValue("javaField");
 
             ParseExcelSheetConfig sheetConfig = new ParseExcelSheetConfig();
@@ -328,7 +396,7 @@ public class ExcelUtil {
             sheetConfig.setRowTitleConfig(new ParseExcelSheetRowTitleConfig());
 
             Element rowTitleEl = sheetEl.element("rowTitle");
-            Integer rowNum = Integer.valueOf(rowTitleEl.attributeValue("rowNum"));
+            Integer rowNum = Integer.parseInt(rowTitleEl.attributeValue("rowNum")) - 1;
 
             ParseExcelSheetRowTitleConfig rowTitleConfig = sheetConfig.getRowTitleConfig();
             rowTitleConfig.setRowNum(rowNum);
@@ -337,7 +405,14 @@ public class ExcelUtil {
 
             List<Element> cellElList = rowTitleEl.elements("cell");
             cellElList.forEach(cellEl -> {
-                Integer colNum = Integer.valueOf(cellEl.attributeValue("colNum"));
+                int colNum;
+                Attribute colTagAttr = cellEl.attribute("colTag");
+                if (null == colTagAttr) {
+                    colNum = Integer.parseInt(cellEl.attributeValue("colNum")) - 1;
+                } else {
+                    colNum = ExcelCellEnum.getValue(colTagAttr.getStringValue());
+                }
+
                 String cellJavaField = cellEl.attributeValue("javaField");
                 String desc = cellEl.attributeValue("desc");
                 String defaultValue = cellEl.attributeValue("defaultValue");

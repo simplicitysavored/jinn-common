@@ -83,6 +83,16 @@ public final class FileUtil {
         }
     }
 
+    public static File createFolderIfNotExists(String folderPath) {
+        File file = new File(folderPath);
+        if (!file.exists()) {
+            if (file.mkdirs()) {
+                return file;
+            }
+        }
+        return null;
+    }
+
     public static boolean isFile(String filePath) {
         File file = new File(filePath);
         if (file.exists()) {
@@ -278,6 +288,7 @@ public final class FileUtil {
 
     /**
      * 从 classpath 中获取获取文件内容
+     *
      * @param name 文件名
      * @return 文件内容
      * @throws IOException 异常

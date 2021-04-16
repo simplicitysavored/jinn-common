@@ -21,11 +21,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileAlreadyExistsException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -329,6 +327,33 @@ public class HttpUtil {
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
+    }
+
+    public static void download(String url, String targetFilePath) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        if (new File(targetFilePath).exists()) {
+            throw new FileAlreadyExistsException("文件已存在：" + targetFilePath);
+        }
+        URLConnection conn = getURLConnection(new URL(url), "GET", null);
+
+        try (InputStream is = conn.getInputStream();
+             FileOutputStream fos = new FileOutputStream(targetFilePath)) {
+
+            byte[] bytes = new byte[1024 * 1024];
+            int length;
+            while ((length = is.read(bytes)) != -1) {
+                fos.write(bytes, 0, length);
+                fos.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void main(String[] args) throws NoSuchAlgorithmException, IOException, KeyManagementException {
+        String url = "https://img.linovelib.com/2/2679/126532/114298.jpg";
+        String path = "/Users/yuanjin/Documents/tmp/001.jpg";
+        download(url, path);
     }
 
 }
