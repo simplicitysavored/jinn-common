@@ -43,7 +43,7 @@ public class StringUtil {
      * @return {true|false}
      */
     public static Boolean isBlank(String value) {
-        return isNotEmpty(value) && value.trim().length() == 0;
+        return isEmpty(value) || value.trim().length() == 0;
     }
 
     public static Boolean isNotBlank(String value) {

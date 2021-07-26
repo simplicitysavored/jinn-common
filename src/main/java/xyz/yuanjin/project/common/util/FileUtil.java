@@ -258,8 +258,15 @@ public final class FileUtil {
         fos.close();
     }
 
+    public static boolean delete(String path) {
+        return delete(new File(path));
+    }
+
     public static boolean delete(File file) {
         boolean success = false;
+        if (notExists(file)) {
+            return false;
+        }
         if (isFileOrEmptyDirectory(file)) {
             return file.delete();
         } else {

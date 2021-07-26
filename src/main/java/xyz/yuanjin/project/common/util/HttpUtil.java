@@ -342,10 +342,10 @@ public class HttpUtil {
             int length;
             while ((length = is.read(bytes)) != -1) {
                 fos.write(bytes, 0, length);
-                fos.flush();
             }
+            fos.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
 
     }
